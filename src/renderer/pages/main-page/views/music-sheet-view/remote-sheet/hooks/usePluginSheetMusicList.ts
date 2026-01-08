@@ -21,12 +21,19 @@ export default function usePluginSheetMusicList(
     );
 
     // 当前正在搜索的信息
-    const currentSheetItemRef = useRef<IMusic.IMusicSheetItem | null>(null);
+    const currentSheetItemRef = useRef<IMusic.IMusicSheetItem | null>({
+        ...originalSheetItem,
+        platform,
+        id,
+    });
     // 页码
     const currentPageRef = useRef(1);
 
     const getSheetDetail = async () => {
-        if (!isSameMedia(currentSheetItemRef.current, originalSheetItem)) {
+        // 用 platform 和 id 判断是否切换了歌单，而不是用 originalSheetItem 的引用
+        const isNewSheet = currentSheetItemRef.current?.platform !== platform || currentSheetItemRef.current?.id !== id;
+
+        if (isNewSheet) {
             // 1.1 如果是切换了新的歌单
             // 恢复初始状态 并设置当前的歌曲项
             currentSheetItemRef.current = {
