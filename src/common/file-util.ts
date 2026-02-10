@@ -65,9 +65,15 @@ export async function parseLocalMusicItem(
                 );
             }
             if (common.lyrics) {
-                common.lyrics = common.lyrics.map((it) =>
-                    it ? iconv.decode(it as unknown as Buffer, encoding) : "",
-                ) as any;
+                common.lyrics = common.lyrics.map((lyric) => {
+                    if (lyric && lyric.text) {
+                        return {
+                            ...lyric,
+                            text: iconv.decode(lyric.text as unknown as Buffer, encoding),
+                        };
+                    }
+                    return lyric;
+                });
             }
         }
 
