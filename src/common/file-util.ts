@@ -7,7 +7,7 @@ import url from "url";
 import type { BigIntStats, PathLike, StatOptions, Stats } from "original-fs";
 
 function getB64Picture(picture: IPicture) {
-    return `data:${picture.format};base64,${picture.data.toString("base64")}`;
+    return `data:${picture.format};base64,${Buffer.from(picture.data).toString("base64")}`;
 }
 
 const specialEncoding = ["GB2312"];
@@ -65,9 +65,15 @@ export async function parseLocalMusicItem(
                 );
             }
             if (common.lyrics) {
-                common.lyrics = common.lyrics.map((it) =>
-                    it ? iconv.decode(it as unknown as Buffer, encoding) : "",
-                );
+                common.lyrics = common.lyrics.map((lyric) => {
+                    if (lyric && lyric.text) {
+                        return {
+                            ...lyric,
+                            text: iconv.decode(lyric.text as unknown as Buffer, encoding),
+                        };
+                    }
+                    return lyric;
+                });
             }
         }
 
@@ -82,7 +88,7 @@ export async function parseLocalMusicItem(
             localPath: filePath,
             platform: localPluginName,
             id: hash,
-            rawLrc: common.lyrics?.join(""),
+            rawLrc: common.lyrics?.map((lyric) => lyric.text).join(""),
         };
     } catch (e) {
         return {
