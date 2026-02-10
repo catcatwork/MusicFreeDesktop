@@ -56,6 +56,7 @@ export default [
             }],
             "@typescript-eslint/no-non-null-assertion": "warn",
             "no-console": "warn",
+            "no-useless-assignment": "warn", // ESLint 10 new rule - set to warn instead of error
         },
         settings: {
             "import/resolver": {

@@ -95,7 +95,6 @@ async function changeWatchPath(addPaths?: string[], rmPaths?: string[]) {
                     watchedDirEntry._removeWatcher(
                         path.dirname(it),
                         path.basename(it),
-                        true,
                     );
                 }
                 // watcher._watched.delete(it);
