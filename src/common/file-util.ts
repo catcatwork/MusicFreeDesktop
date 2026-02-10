@@ -88,7 +88,7 @@ export async function parseLocalMusicItem(
             localPath: filePath,
             platform: localPluginName,
             id: hash,
-            rawLrc: common.lyrics?.join(""),
+            rawLrc: common.lyrics?.map((lyric) => lyric.text).join(""),
         };
     } catch (e) {
         return {
